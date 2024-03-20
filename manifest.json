@@ -5,12 +5,10 @@
     "version": "1.0" ,
     "description" : "Chrome Extension improving queue and water later features from the Youtube Platform.",
     "permissions" : [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
-    "background": {
-        "service_worker": "sw.js",
-        "persistent": false
-    },
+   
     "action": {
         "default_popup": "enqueue.html"
 
