@@ -1,22 +1,22 @@
-.dropdown-menu{
-    width: 300px;
-    height: 400px;
-    overflow-y: scroll;
-    border: 1px solid gray;
+body {
+    font-family: Arial;
+    background-color: #f9f9f9;
+    margin:0;
+    padding:0;
+}
+header {
+    background-color: #ff0000; /*youtube red*/
+    color: white;
+    padding:10px;
+}
+
+#sortDropdown {
+    padding: 5px;
     border-radius: 5px;
-    position: relative;
-    display: inline-block;
-
+    border: none;
+    margin-left:20px;
 }
 
-.video-preview {
-    margin-bottom: 10px;
-}
-
-.video-title {
-    font-weight: bold;
-}
-
-.video-details {
-    font-size: 9px;
+#videoQueue {
+    padding: 20px;
 }
