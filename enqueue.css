@@ -3,18 +3,29 @@ body {
     background-color: #f9f9f9;
     margin:0;
     padding:0;
+    width: 300px;
+    height: 400px;
+    overflow: auto; /* scrolling bars */
 }
 header {
     background-color: #ff0000; /*youtube red*/
     color: white;
-    padding:10px;
+    padding:20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+h1 {
+    font-size: 24px;
 }
 
 #sortDropdown {
-    padding: 5px;
-    border-radius: 5px;
+    padding: 10px;
+    border-radius: 10px;
     border: none;
     margin-left:20px;
+    font-size: 16px;
+    
 }
 
 #videoQueue {
