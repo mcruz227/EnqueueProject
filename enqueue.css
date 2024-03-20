@@ -1,33 +1,93 @@
 body {
-    font-family: Arial;
-    background-color: #f9f9f9;
-    margin:0;
-    padding:0;
-    width: 300px;
-    height: 400px;
-    overflow: auto; /* scrolling bars */
+  font-family: Arial;
+  background-color: #f9f9f9;
+  margin:0;
+  padding:0;
+  width: 300px;
+  height: 400px;
+  overflow: auto; /* scrolling bars */
 }
 header {
-    background-color: #ff0000; /*youtube red*/
-    color: white;
-    padding:20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background-color: #ff0000; /*youtube red*/
+  color: white;
+  padding:20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 h1 {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 #sortDropdown {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    margin-left:20px;
-    font-size: 16px;
-    
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  margin-left:20px;
+  font-size: 16px;
+  
 }
 
 #videoQueue {
-    padding: 20px;
+  padding: 20px;
+}
+
+.dropdown-menu{
+  width: 300px;
+  height: 400px;
+  overflow-y: scroll;
+  border: 1px solid gray;
+  border-radius: 5px;
+  position: relative;
+  display: inline-block;
+
+}
+
+.video-preview {
+  margin-bottom: 10px;
+}
+
+.video-title {
+  font-weight: bold;
+}
+
+.video-details {
+  font-size: 9px;
+}
+
+.sort-dropdown {
+position: relative;
+display: inline-block;
+}
+
+.sort-btn {
+background-color: #4CAF50;
+color: white;
+padding: 10px 20px;
+border: none;
+cursor: pointer;
+}
+
+.sort-options {
+display: none;
+position: absolute;
+background-color: #f9f9f9;
+min-width: 160px;
+box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+z-index: 1;
+}
+
+.sort-options a {
+color: black;
+padding: 12px 16px;
+text-decoration: none;
+display: block;
+}
+
+.sort-options a:hover {
+background-color: #f1f1f1;
+}
+
+.sort-dropdown:hover .sort-options {
+display: block;
 }
