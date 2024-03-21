@@ -9,17 +9,24 @@
   <body>
     <!-- Headers Content-->
     <header>
-      <h1>Enqueue</h1>
+      <h1 class="header-title">Enqueue</h1>
         <div class="dropdown">
            <!-- <button class="dropbtn">Queue</button> -->
-           <button class="dropbtn">Sort By ▼</button>
+           <div class="dropbtn-container">
+             <button class="dropbtn">Sort By</button>
+             <img id="dropdown-order" src="./img/Order.svg" title="Decending">
+           </div>
+
            <div class="dropdown-content"> 
                      <a href="#">Channel Title</a>
                      <a href="#">Date</a>
                      <a href="#">Video Title</a>
           </div>
         </div>
-      </div>
+
+        <img class="header-button" src="./img/Shuffle.svg">
+        <img class="header-button" src="./img/Settings.svg">
+      <!-- </div> -->
     </header>
 
     <!-- Videos Content-->
