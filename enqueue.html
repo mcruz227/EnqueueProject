@@ -5,35 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Enqueue</title>
     <link rel="stylesheet" href="enqueue.css" />
+    <script src="enqueue.js"></script>
   </head>
   <body>
     <!-- Headers Content-->
     <header>
-      <h1>Enqueue</h1>
+      <h1 class="header-title">Enqueue</h1>
         <div class="dropdown">
            <!-- <button class="dropbtn">Queue</button> -->
-           <button class="dropbtn">Sort By ▼</button>
-           <div class="dropdown-content"> 
-                     <a href="#">Channel Title</a>
-                     <a href="#">Date</a>
-                     <a href="#">Video Title</a>
+          <div class="dropbtn-container">
+            <button class="dropbtn">Sort By</button>
+            <img id="dropdown-order" src="./img/Order.svg" title="Decending">
           </div>
+
+          <div class="dropdown-content"> 
+            <a class="dropdown-content-option">Channel Title</a>
+            <a class="dropdown-content-option">Date</a>
+            <a class="dropdown-content-option">Video Title</a>
+          </div>
+
         </div>
-      </div>
+
+        <img class="header-button" src="./img/Shuffle.svg">
+        <img class="header-button" src="./img/Settings.svg">
+      <!-- </div> -->
     </header>
 
     <!-- Videos Content-->
     <div class="video-container">
-            <div id="videoQueue">
+      <div id="videoQueue">
               <!-- video things that need to be integrated--> 
-              test test testing
-            </div>
-          </div>
+        test test testing
+      </div>
+    </div>
    <!-- not sure what this: >>>>>>> 48ee87fb52723f74facb180f97c49424885b9f51 -->
-        </div>
-    
-        <script src="enqueue.js"></script>
-      </body>
-    </html>
   </body>
 </html>
