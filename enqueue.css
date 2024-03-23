@@ -20,9 +20,25 @@ body {
   background-color: #f9f9f9;
   margin:0;
   padding:0;
-  width: 375px;
+  width: 400px;
   height: 500px;
-  overflow: auto; /* scrolling bars */
+ /* scrolling bars */
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: #cccccc;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #4d4d4d;
+  border-radius: 50px;
 }
 
 header {
@@ -52,6 +68,9 @@ h1 {
 
 .header-button:hover{
   cursor: pointer;
+}
+.dropbtn-container{
+  display: flex;
 }
 
 .dropbtn {
@@ -104,7 +123,74 @@ h1 {
   cursor: pointer;
 }
 
+.image-button{
+  border: none;
+  cursor: pointer;
+  appearance: none;
+  background-color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.video-container{
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.video-entry{
+  /* width: 100%; */
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+.video-entry:hover{
+  box-shadow: 0 0 0.5rem 0 rgba(0,0,0,0.2);
+}
+
+.video-order-number{
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+.video-thumbnail{
+  height: 4rem;
+  width: 7.11rem;
+  border-radius: 0.75rem;
+  border: 0.25rem solid black;
+}
+
+.video-information-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.25rem;
+}
+
+.video-title{
+  font-size: 1rem;
+  margin: 0;
+}
+
+.video-description{
+  color: #757575;
+  margin: 0;
+}
+
+.video-drag-button{
+  margin-left: auto;
+}
+
+.video-drag-button:hover{
+  cursor: pointer;
+}
+
+#video-drag-button-image{
+  height: 1rem;
+  pointer-events: none;
+}
 
 /* .video-preview {
   margin-bottom: 10px;
