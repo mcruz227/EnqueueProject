@@ -22,6 +22,7 @@ body {
   padding:0;
   width: 400px;
   height: 500px;
+  user-select: none;
  /* scrolling bars */
 }
 
@@ -151,8 +152,12 @@ h1 {
 }
 
 .video-order-number{
-  min-width: 1.25rem;
+  font-size: 1.5rem;
   text-align: center;
+}
+
+.video-entry:hover .video-order-number{
+  display: none;
 }
 
 .video-thumbnail{
@@ -187,11 +192,29 @@ h1 {
   cursor: pointer;
 }
 
-#video-drag-button-image{
-  height: 1rem;
+.video-button-image{
+  height: 1.5rem;
   pointer-events: none;
 }
 
+.delete-button{
+  display: none;
+}
+
+.video-entry:hover .delete-button{
+  display: block;
+}
+
+#video-delete-button-image{
+  height: 1rem;
+}
+
+.video-left-side-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.25rem;
+}
 /* .video-preview {
   margin-bottom: 10px;
 }
