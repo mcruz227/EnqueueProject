@@ -31,7 +31,17 @@ function addVideo(){
     document.getElementById("videoQueue").innerHTML+= "<div class='video-entry' id='entry" + videos + "'></div>";
 
     var video = document.getElementById("entry" + videos);
-    video.innerHTML+="<h1 class='video-order-number' id='video-number-" + videos +"'>" + videos + "</h1>";
+    video.innerHTML+="<div class='video-left-side-container' id='left-side-" + videos + "'></div>";
+
+    var leftSideContainer = document.getElementById("left-side-" + videos);
+    leftSideContainer.innerHTML+="<button class='image-button delete-button' id='video-" + videos + "-delete-button'></button>";
+
+    var deleteButton = document.getElementById("video-" + videos + "-delete-button");
+    deleteButton.innerHTML+="<img class='video-button-image' src='./img/Delete.svg' id='video-delete-button-image'>";
+
+    leftSideContainer.innerHTML+="<h1 class='video-order-number' id='video-number-" + videos +"'>" + videos + "</h1>";
+
+
     video.innerHTML+="<img class='video-thumbnail' id='video-image-" + videos + "'>";
     video.innerHTML+="<div class='video-information-container' id='video-information-" + videos + "'></div>";
 
@@ -42,5 +52,5 @@ function addVideo(){
     video.innerHTML+= "<button class='image-button video-drag-button' id='video-" + videos + "-drag-button'></button>";
 
     var dragButton = document.getElementById("video-" + videos + "-drag-button");
-    dragButton.innerHTML+= "<img src='./img/Drag.svg' id='video-drag-button-image'>";
+    dragButton.innerHTML+= "<img class='video-button-image' src='./img/Drag.svg' id='video-drag-button-image'>";
 }
