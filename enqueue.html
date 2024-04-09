@@ -11,6 +11,7 @@
     <!-- Headers Content-->
     <header>
       <h1 class="header-title">Enqueue</h1>
+<!-- videoBox -->
         <div class="dropdown">
            <!-- <button class="dropbtn">Queue</button> -->
           <div class="dropbtn-container">
@@ -25,8 +26,21 @@
             <a class="dropdown-content-option">Date</a>
             <a class="dropdown-content-option">Video Title</a>
           </div>
-
+<!-- -->
+      <div class="dropdown">
+        <!-- <button class="dropbtn">Queue</button> -->
+        <div class="dropbtn-container">
+          <button class="dropbtn">Sort By</button>
+          <img id="dropdown-order" src="./img/Order.svg" title="Decending" />
         </div>
+<!-- main --> 
+
+        <div class="dropdown-content">
+          <a class="dropdown-content-option">Channel Title</a>
+          <a class="dropdown-content-option">Date</a>
+          <a class="dropdown-content-option">Video Title</a>
+        </div>
+<!--videoBox --> 
         <button class="image-button" id="shuffle-button">
           <img class="header-button" src="./img/Shuffle.svg">
         </button>
@@ -34,10 +48,17 @@
         <button class="image-button" id="settings-button">
           <img class="header-button" src="./img/Settings.svg">
         </button>
+<!-- -->
+      </div>
+
+      <img class="header-button" src="./img/Shuffle.svg" />
+      <img class="header-button" src="./img/Settings.svg" />
+<!-- main -->
       <!-- </div> -->
     </header>
 
     <!-- Videos Content-->
+<!-- videoBox-->
     <div class="video-container"  id="videoQueue">
         <!-- <div class="video-entry" id="entry0">
           <h1 class="video-order-number" id="video-number-0">1</h1>
@@ -50,7 +71,14 @@
             <img src="./img/Drag.svg" id="video-drag-button-image">
           </button>
         </div> -->
+<!-- -->
+    <div class="video-container">
+      <div id="videoQueue">
+        <!-- video things that need to be integrated-->
+        test test testing
+      </div>
+<!-- main -->
     </div>
-   <!-- not sure what this: >>>>>>> 48ee87fb52723f74facb180f97c49424885b9f51 -->
+    <!-- not sure what this: >>>>>>> 48ee87fb52723f74facb180f97c49424885b9f51 -->
   </body>
 </html>
