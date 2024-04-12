@@ -112,7 +112,8 @@ h1 {
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
+} 
+
 
 .dropdown-content-option{
   color: black;

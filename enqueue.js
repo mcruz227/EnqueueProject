@@ -1,32 +1,33 @@
 var ascending = false;
 var videos = 0;
 
-async function fetchVideoData(){
 
+async function fetchVideoData() {
 }
 
 fetchVideoData();
+
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("dropdown-order").addEventListener("click", flipOrder);
     document.getElementById("shuffle-button").addEventListener("click", addVideo);
 });
 
-function flipOrder(){
+function flipOrder() {
     var dropdownOrder = document.getElementById("dropdown-order");
     
-    if(ascending){
+    if(ascending) {
         dropdownOrder.style.transform = "rotate(0deg)";
         dropdownOrder.title="Descending";
         ascending = false;
-    }else{
+    } else {
         dropdownOrder.style.transform = "rotate(180deg)";
         dropdownOrder.title="Ascending";
         ascending = true;
     }
 }
 
-function addVideo(){
+function addVideo() {
     videos++;
     document.getElementById("videoQueue").innerHTML+= "<div class='video-entry' id='entry" + videos + "'></div>";
 
@@ -41,7 +42,6 @@ function addVideo(){
 
     leftSideContainer.innerHTML+="<h1 class='video-order-number' id='video-number-" + videos +"'>" + videos + "</h1>";
 
-
     video.innerHTML+="<img class='video-thumbnail' id='video-image-" + videos + "'>";
     video.innerHTML+="<div class='video-information-container' id='video-information-" + videos + "'></div>";
 
@@ -54,3 +54,4 @@ function addVideo(){
     var dragButton = document.getElementById("video-" + videos + "-drag-button");
     dragButton.innerHTML+= "<img class='video-button-image' src='./img/Drag.svg' id='video-drag-button-image'>";
 }
+
