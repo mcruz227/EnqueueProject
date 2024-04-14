@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="enqueue.css" />
   </head>
   <body>
+    <!-- HEADER!!!! -->
     <header>
       <h1 class="header-title">Enqueue</h1>
-      <!-- videoBox -->
+      <!-- SORTING DROPDOWN -->
       <div class="dropdown">
         <div class="dropbtn-container">
           <button class="dropbtn" id="sort-by-button">Sort By</button>
@@ -17,7 +18,7 @@
             <img id="dropdown-order" src="./img/Order.svg" title="Descending" />
           </button>
         </div>
-
+        <!-- DROPDOWN OPTIONS -->
         <div class="dropdown-content">
           <a class="dropdown-content-option">Channel Title</a>
           <a class="dropdown-content-option">Date</a>
@@ -25,19 +26,19 @@
         </div>
       </div>
 
-      <!--videoBox -->
+      <!-- SHUFFLE BUTTON  -->
       <button class="image-button" id="shuffle-button">
         <img class="header-button" src="./img/Shuffle.svg" />
       </button>
-
+      <!-- SETTINGS BUTTON -->
       <button class="image-button" id="settings-button">
         <img class="header-button" src="./img/Settings.svg" />
       </button>
     </header>
 
-    <!-- Videos Content-->
+    <!-- VIDEOS CONTENT CONTAINER -->
     <div class="video-container" id="videoQueue">
-      <div class="video-entry" id="entry0">
+      <!-- <div class="video-entry" id="entry0">
         <div class="video-left-side-container">
           <button class="image-button delete-button" id="video-0-delete-button">
             <img
@@ -67,10 +68,10 @@
             id="video-drag-button-image"
           />
         </button>
-      </div>
+      </div>-->
     </div>
 
-    <!-- newVideoInput -->
+    <!-- NEW VIDEO INPUT  -->
     <div class="video-input-container">
       <h1 id="video-input-instruction">
         Enter a <b>YouTube</b> URL to queue a video.
@@ -86,6 +87,7 @@
       </div>
     </div>
 
+    <!-- JS FILE -->
     <script src="enqueue.js"></script>
   </body>
 </html>

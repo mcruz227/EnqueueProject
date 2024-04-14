@@ -1,9 +1,10 @@
 
+
 {
     "manifest_version" : 3,
     "name" : "Enqueue Extension",
     "version": "1.0" ,
-    "description" : "Chrome Extension improving queue and water later features from the Youtube Platform.",
+    "description" : "Chrome Extension improving queue and watch later features from the Youtube Platform.",
     "permissions" : [
         "activeTab",
         "storage"

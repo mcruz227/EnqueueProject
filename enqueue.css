@@ -1,19 +1,39 @@
-@font-face {
+/* FONT CUSTOM RULES!! */
+  @font-face {
   font-family: 'Spotify';
   src: url(./fonts/Regular.otf);
   font-weight: 100;
-}
-@font-face {
+   }
+  @font-face {
   font-family: 'Spotify';
   src: url(./fonts/Bold.otf);
   font-weight: 200;
-}
-@font-face {
+  }
+ @font-face {
   font-family: 'Spotify';
   src: url(./fonts/Black.otf);
   font-weight: 300;
-}
+  }
 
+/* STYLING SCROLL BARS */
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background-color: #cccccc;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #4d4d4d;
+    border-radius: 50px;
+  }
+
+  /* BODY RULES */
 body {
   font-family: 'Spotify';
   font-weight: 100;
@@ -28,22 +48,7 @@ body {
  /* scrolling bars */
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 15px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background-color: #cccccc;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #4d4d4d;
-  border-radius: 50px;
-}
-
+/* HEADER STYLES */
 header {
   font-weight: 300;
   background-color: #c52c25; /*youtube red*/
@@ -72,6 +77,8 @@ h1 {
 .header-button:hover{
   cursor: pointer;
 }
+
+/* DROPDOWN STYLES */
 .dropbtn-container{
   display: flex;
 }
@@ -137,6 +144,7 @@ h1 {
   align-items: center;
 }
 
+/* VIDEO ENTRY STYLES */
 .video-container{
   overflow-y: scroll;
   flex-grow: 1;
