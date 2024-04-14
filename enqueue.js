@@ -3,9 +3,13 @@ var videos = 0;
 
 // seeks out any clicks on the dropdown order button and video input submit button
 document.addEventListener('DOMContentLoaded', function() {
+    getVideoLinks(function(videos) {
+        populateUI(videos);
+    });
+  
     document.getElementById("dropdown-order").addEventListener("click", flipOrder);
     document.getElementById("video-input-submit-button").addEventListener("click", addVideoButton);
-
+    document.getElementById("shuffle-button").addEventListener("click", shuffleVideos);
     document.getElementById("videoQueue").addEventListener("click", function(event) {
         if (event.target.classList.contains("video-entry")) {
             openVideoInTab(event.target.dataset.videoId);
@@ -13,6 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteVideo(event.target.dataset.videoEntryId);
         }
     });
+     var sortOptions = document.getElementsByClassName("dropdown-content-option");
+     for (var i = 0; i < sortOptions.length; i++) {
+        sortOptions[i].addEventListener("click", function(event) {
+            sortVideos(event.target.textContent);
+        });
+    }
 });
 
 function openVideoInTab(videoId){
@@ -68,6 +78,12 @@ function flipOrder() {
     }
 }
 
+function populateUI(videos) {
+    videos.forEach(function(videoLink) {
+        createVideoEntry({ videoId: extractVideoID(videoLink), title: 'Video Title', channel: 'Channel Name', thumbnail: 'Thumbnail URL' });
+    });
+}
+
 // when video input submit button is click, extracts video id from the video url entered, calls video id to backend
 function addVideoButton() {
     var videoUrl = document.getElementById('video-input-box').value;
@@ -75,6 +91,7 @@ function addVideoButton() {
          
     if (videoId) {
         videoID_toBackend(videoId);
+        saveVideoLink(videoUrl);
     } else {
         console.error("Invalid YouTube video URL");
     }
@@ -109,7 +126,58 @@ function videoID_toBackend(videoId) {
 }
 
 
-
-
 // initial call to the function
-videoID_toBackend("your_video_id_here");
+// videoID_toBackend("your_video_id_here");
+
+function sortVideos(sortOption) {
+    var videoEntries = document.querySelectorAll('.video-entry');
+    var videoArray = Array.from(videoEntries);
+    videoArray.sort(function(a, b) {
+        var textA = a.querySelector('.video-' + sortOption.toLowerCase()).textContent.toUpperCase();
+        var textB = b.querySelector('.video-' + sortOption.toLowerCase()).textContent.toUpperCase();
+        if (textA < textB) return -1;
+        if (textA > textB) return 1;
+        return 0;
+    });
+    var videoQueue = document.getElementById("videoQueue");
+    videoQueue.innerHTML = '';
+    videoArray.forEach(function(entry) {
+        videoQueue.appendChild(entry);
+    });
+}
+
+//  to shuffle videos
+function shuffleVideos() {
+    var videoEntries = document.querySelectorAll('.video-entry');
+    var videoArray = Array.from(videoEntries);
+    videoArray.sort(function() { return 0.5 - Math.random() });
+    var videoQueue = document.getElementById("videoQueue");
+    videoQueue.innerHTML = '';
+    videoArray.forEach(function(entry) {
+        videoQueue.appendChild(entry);
+    });
+}
+
+// getting VIDEOS TO ACTUALLY STAY/SAVED IN THE EXTENSION for each user
+function saveVideoLink(videoLink) {
+    chrome.storage.local.get({ videos: [] }, function(data) {
+        var videos = data.videos;
+        videos.push(videoLink);
+        chrome.storage.local.set({ videos: videos });
+    });
+}
+
+function getVideoLinks(callback) {
+    chrome.storage.local.get({ videos: [] }, function(data) {
+        var videos = data.videos;
+        console.log("retrieved videos: ", videos);
+        callback(videos);
+    });
+}
+
+
+getVideoLinks(function(videos) {
+    videos.forEach(function(video) {
+    });
+});
+
