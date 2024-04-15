@@ -1,5 +1,6 @@
 var ascending = false;
 var videos = 0;
+const queueContainer = document.getElementById("videoQueue");
 
 // seeks out any clicks on the dropdown order button and video input submit button
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("dropdown-order").addEventListener("click", flipOrder);
     document.getElementById("video-input-submit-button").addEventListener("click", function() {
         addVideoButton();
-        repopulateVideoList(); 
+        //repopulateVideoList(); 
     });
 
     document.getElementById("shuffle-button").addEventListener("click", shuffleVideos);
@@ -73,25 +74,93 @@ function createVideoEntry(entry, data) {
         channel: data.channel,
         thumbnail: data.thumbnail
     };
+
 // calling this means defining the video details^^ with [entryID] in the chrome storage. 
     chrome.storage.local.set({ [entryId]: videoDetails }, function() {
         console.log("Video details saved:", videoDetails);
     });
+    
+
+    var entry = document.createElement("div");
+
+    queueContainer.appendChild(entry);
+
+    entry.innerHTML = `
+        <div class='video-left-side-container'>
+            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
+            <h1 class='video-order-number'>${videos}</h1>
+        </div>
+        <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
+        <div class='video-information-container'>
+            <h1 class='video-title'>${data.title}</h1>
+            <p class='video-description'>${data.channel}</p>
+        </div>
+        <button class='image-button video-drag-button'></button>
+    `;
+
 }
+
+function addVideo(data){
+    videos++;
+    var entry = document.createElement("div");
+    entry.classList.add("video-entry");
+    entry.id = "entry" + videos;
+    entry.dataset.videoId = data.videoId; 
+    queueContainer.appendChild(entry);
+
+    entry.innerHTML = `
+        <div class='video-left-side-container'>
+            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
+            <h1 class='video-order-number'>${videos}</h1>
+        </div>
+        <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
+        <div class='video-information-container'>
+            <h1 class='video-title'>${data.title}</h1>
+            <p class='video-description'>${data.channel}</p>
+            <p class-'debug'>hey this is currently ${videos} into the list</p>
+        </div>
+        <button class='image-button video-drag-button'></button>
+    `;
+}
+
+function visualizeVideos(data){
+    videos++;
+    var entry = document.createElement("div");
+    entry.classList.add("video-entry");
+    entry.id = "entry" + videos;
+    entry.dataset.videoId = data.videoId; 
+    queueContainer.appendChild(entry);
+
+    entry.innerHTML = `
+        <div class='video-left-side-container'>
+            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
+            <h1 class='video-order-number'>${videos}</h1>
+        </div>
+        <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
+        <div class='video-information-container'>
+            <h1 class='video-title'>${data.title}</h1>
+            <p class='video-description'>${data.channel}</p>
+        </div>
+        <button class='image-button video-drag-button'></button>
+    `;
+}
+
+
+
 //separate function to repopulate the video list with the ^ updated data
 function repopulateVideoList(){
-    var videoQueue = document.getElementById("videoQueue");
 
     chrome.storage.local.get(null, function(data) {
         Object.keys(data).forEach(function(key) {
             if (key.startsWith('entry')) {
-                createVideoEntry(document.getElementById(key), data[key]);
+                addVideo(document.getElementById(key), data[key]);
             }
         });
     });
 }
+
 //calling the function^
-document.addEventListener('DOMContentLoaded', repopulateVideoList);
+//document.addEventListener('DOMContentLoaded', repopulateVideoList);
 
 // this splits the url after the = and takes that part as a VIDEO ID
 function extractVideoID(videoURL) {
@@ -118,11 +187,31 @@ function flipOrder() {
     }
 }
 
+// function populateUI(videos) {
+//     videos.forEach(function(videoLink) {
+//         addVideo({ videoId: videos.videoId, title: videos.title, channel: videos.channel, thumbnail: 'Thumbnail URL' });
+//     });
+// }
+
 function populateUI(videos) {
-    videos.forEach(function(videoLink) {
-        createVideoEntry({ videoId: extractVideoID(videoLink), title: 'Video Title', channel: 'Channel Name', thumbnail: 'Thumbnail URL' });
-    });
-}
+      if (videos.length > 0) {
+        for (const video of videos) {
+          const videoId = video.videoId;
+          console.log("Video ID:", videoId);
+          addVideo({ 
+            videoId: video.videoId, 
+            title: video.title, 
+            channel: video.channel, 
+            thumbnail: video.thumbnail});
+
+          // You can perform additional actions with the videoId here
+        }
+      } else {
+        console.log("No videos found in storage");
+      }
+    
+  }
+
 
 // when video input submit button is click, extracts video id from the video url entered, calls video id to backend
 function addVideoButton() {
@@ -131,7 +220,7 @@ function addVideoButton() {
 
     if (isValidYouTubeURL(videoUrl)) {
         var videoId = extractVideoID(videoUrl);
-        saveVideoLink(videoUrl);
+        //saveVideoLink(videoUrl);
         videoID_toBackend(videoId);
         videoUrlInput.value = ''; 
         showNotification('Video added successfully!', 'success');
@@ -164,9 +253,6 @@ function showNotification(message, type) {
         notification.remove();
     }, 3000);
 }
-
-
-
 
 
 // initial call to the function
@@ -217,73 +303,153 @@ function shuffleVideos() {
 }, 2000);
 }
 
-// getting VIDEOS TO ACTUALLY STAY/SAVED IN THE EXTENSION for each user
+// // getting VIDEOS TO ACTUALLY STAY/SAVED IN THE EXTENSION for each user
+// function saveVideoLink(videoLink) {
+//     chrome.storage.local.get({ videos: [] }, function(data) {
+//         var videos = data.videos;
+//         videos.push(videoLink);
+
+//         chrome.storage.local.set({ videos: videos });
+
+//         chrome.storage.local.set({ videos: videos }, function() {
+//             getVideoLinks(function(videos){
+//                 console.log("video links after saving: " , videos);
+//             });
+//         });
+//     });
+// }
+
+
 function saveVideoLink(videoLink) {
+    
     chrome.storage.local.get({ videos: [] }, function(data) {
         var videos = data.videos;
         videos.push(videoLink);
-        chrome.storage.local.set({ videos: videos }, function() {
-            getVideoLinks(function(videos){
-                console.log("video links after saving: " , videos);
-            });
-        });
+        chrome.storage.local.set({ videos: videos });
     });
 }
 
-function getVideoLinks(callback) {
-    chrome.storage.local.get(null, function(data) {
-        var videos = Object.values(data).filter(entry => entry.videoId);
-        console.log("Retrieved videos:", videos);
-        callback(videos.map(entry => ({
-            videoId: entry.videoId,
-            title: entry.title,
-            channel: entry.channel,
-            thumbnail: entry.thumbnail
-        })));
+//The same as the function already implemented
+function saveVideoData(videoLink) {
+    // Debug to reset the storage while fiddling with 
+    // chrome.storage.local.set({ videos: [] });
+
+    chrome.storage.local.get({ videos: [] }, function(data) {
+        var videos = data.videos;
+        videos.push(videoLink);
+        chrome.storage.local.set({ videos: videos });
     });
-}
+
+  }
+
+// function getVideoLinks(callback) {
+//     chrome.storage.local.get({ videos: [] }, function(data) {
+//         var videos = data.videos;
+//         console.log("retrieved videos: ", videos);
+//         callback(videos);
+//     });
+// }
+
+function getVideoLinks(callback) {
+    chrome.storage.local.get({ videos: [] }, function (data) {
+      const videos = data.videos || [];  // Use default empty array if "videos" key doesn't exist
+  
+      console.log("Retrieved videos:", videos);
+  
+      // Process videos to create structured objects (optional)
+      if (videos.length > 0) { // Check for video entries and object structure
+        const processedVideos = videos.map(entry => ({
+        channel: entry.channel || "",  // Set default empty string for missing channels
+        thumbnail: entry.thumbnail || "",  // Set default empty string for missing thumbnails
+        title: entry.title || "",  // Set default empty string for missing titles
+        videoId: entry.videoId,
+
+        }));
+        callback(processedVideos);
+      } else {
+        // Handle case where no videos are found or data format is unexpected
+        console.log("No videos found in storage or unexpected data format.");
+        callback([]);
+      }
+    });
+  }
+
+getVideoLinks(function(videos) {
+    videos.forEach(function(video) {
+    });
+});
+
 
 // getVideoLinks(function(videos) {
 //     videos.forEach(function(video) {
 //     });
 // });
 // this will send the ID of a youtube video to the backend(python apiCall) in order to get detail about video
-function videoID_toBackend(videoId) {
-    showNotification('Fetching video details...', 'info');
+// function videoID_toBackend(videoId) {
+//     showNotification('Fetching video details...', 'info');
 
-    fetch('http://localhost:8000/get_video_details', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ videoId: videoId })
+//     fetch('http://localhost:8000/get_video_details', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ videoId: videoId })
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         if (data) {
+//             createVideoEntry({
+//                 videoId: videoId,
+//                 title: data.title,
+//                 channel: data.channel,
+//                 thumbnail: data.thumbnail
+//             });
+//             removeNotification('info');
+//             showNotification('Video details fetched successfully!', 'success');
+//         } else {
+//             console.error('Video not found');
+//             removeNotification('info');
+//             showNotification('Video not found. Please check video ID.', 'error');
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error getting video details:', error);
+//         removeNotification('info');
+//         showNotification('Error fetching video details. Please try again later.', 'error');
+//     });
+// }
+
+function videoID_toBackend(videoId) {
+    fetch('https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=AIzaSyDnUbZpNA12WQCmpmottG2Q6GPND08nyBQ&part=snippet', {
+    // we are getting the video id from the users input, then the server 'asks' from the youtube api for details
+        method: 'GET'
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+    // we get a response(ytube details) and the we send it back to our chrome extension
+    .then(response => response.json())
     .then(data => {
-        if (data) {
-            createVideoEntry({
-                videoId: videoId,
-                title: data.title,
-                channel: data.channel,
-                thumbnail: data.thumbnail
-            });
-            removeNotification('info');
-            showNotification('Video details fetched successfully!', 'success');
+        if (data.items && data.items.length > 0) {
+            const videoDetails = data.items[0].snippet;
+        
+        //Save the video data to pass into the video adder and the save function
+        video_info = {
+            videoId: videoId,
+            title: videoDetails.title,
+            channel: videoDetails.channelTitle,
+            thumbnail: videoDetails.thumbnails.default.url
+            }
+        addVideo(video_info);
+        saveVideoData(video_info);
         } else {
-            console.error('Video not found');
-            removeNotification('info');
-            showNotification('Video not found. Please check video ID.', 'error');
+            console.error('video not found')
         }
-    })
-    .catch(error => {
-        console.error('Error getting video details:', error);
-        removeNotification('info');
-        showNotification('Error fetching video details. Please try again later.', 'error');
+         })
+            .catch(error => {
+            console.error('Error getting video details', error);
     });
 }
 
@@ -295,4 +461,3 @@ function removeNotification(type) {
     }
 
 }
-
