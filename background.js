@@ -1,19 +1,29 @@
-// Listen for messages from content scripts
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    if (message.action === "saveVideoLink") {
-        saveVideoLink(message.videoLink);
-    } else if (message.action === "getVideoLinks") {
-        getVideoLinks(sendResponse);
-        // Return true to indicate that sendResponse will be called asynchronously
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.local.set({ videos: [] });
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'saveVideo') {
+        saveVideo(message.video);
+    } else if (message.action === 'getVideos') {
+        getVideos(sendResponse);
         return true;
     }
 });
 
-function saveVideoLink(videoLink) {
-    chrome.runtime.sendMessage({ action: "saveVideoLink", videoLink: videoLink });
+function saveVideo(videoLink) {
+    chrome.storage.local.get({ videos: [] }, function(data) {
+        var videos = data.videos;
+        videos.push(videoLink);
+        chrome.storage.local.set({ videos: videos });
+    });
 }
 
-function getVideoLinks(callback) {
-    chrome.runtime.sendMessage({ action: "getVideoLinks" }, callback);
+function getVideos(callback) {
+    chrome.storage.local.get({ videos: [] }, function(data) {
+        var videos = data.videos;
+        callback(videos);
+    });
 }
 
+  
