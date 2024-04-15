@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   
     document.getElementById("dropdown-order").addEventListener("click", flipOrder);
-    document.getElementById("video-input-submit-button").addEventListener("click", addVideoButton);
+    document.getElementById("video-input-submit-button").addEventListener("click", function() {
+        addVideoButton();
+        repopulateVideoList(); 
+    });
+
     document.getElementById("shuffle-button").addEventListener("click", shuffleVideos);
     document.getElementById("videoQueue").addEventListener("click", function(event) {
         if (event.target.classList.contains("video-entry")) {
@@ -25,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+
 function openVideoInTab(videoId){
     window.open("https://www.youtube.com/watch?v=" + videoId, "_blank");
 }
@@ -36,7 +42,6 @@ function deleteVideo(entryId){
         if (confirmDelete) {
             entry.remove();
 
-            // Remove video details from Chrome Storage
             chrome.storage.local.remove(entryId, function() {
                 console.log("Video details removed:", entryId);
             });
@@ -47,41 +52,46 @@ function deleteVideo(entryId){
 }
 
 
-function createVideoEntry(data) {
-    videos++;
-    var videoQueue = document.getElementById("videoQueue");
-    var entry = document.createElement("div");
-    entry.classList.add("video-entry");
-    var entryId = "entry" + videos;
-    entry.id = entryId;
+function createVideoEntry(entry, data) {
+    
+    var entryId = entry.id;
     entry.dataset.videoId = data.videoId; 
-    videoQueue.appendChild(entry);
+    
 
-    // Store video details in Chrome Storage
+    var titleElement = entry.querySelector('.video-title');
+    var channelElement = entry.querySelector('.video-description');
+    var thumbnailElement = entry.querySelector('.video-thumbnail');
+
+    titleElement.textContent = data.title;
+    channelElement.textContent = data.channel;
+    thumbnailElement.src = data.thumbnail;
+
+    //this is supposed to store video details in the chrome storage
     var videoDetails = {
         videoId: data.videoId,
         title: data.title,
         channel: data.channel,
         thumbnail: data.thumbnail
     };
-
+// calling this means defining the video details^^ with [entryID] in the chrome storage. 
     chrome.storage.local.set({ [entryId]: videoDetails }, function() {
         console.log("Video details saved:", videoDetails);
     });
-
-    entry.innerHTML = `
-        <div class='video-left-side-container'>
-            <button class='image-button delete-button' data-video-entry-id='${entryId}'></button>
-            <h1 class='video-order-number'>${videos}</h1>
-        </div>
-        <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
-        <div class='video-information-container'>
-            <h1 class='video-title'>${data.title}</h1>
-            <p class='video-description'>${data.channel}</p>
-        </div>
-        <button class='image-button video-drag-button'></button>
-    `;
 }
+//separate function to repopulate the video list with the ^ updated data
+function repopulateVideoList(){
+    var videoQueue = document.getElementById("videoQueue");
+
+    chrome.storage.local.get(null, function(data) {
+        Object.keys(data).forEach(function(key) {
+            if (key.startsWith('entry')) {
+                createVideoEntry(document.getElementById(key), data[key]);
+            }
+        });
+    });
+}
+//calling the function^
+document.addEventListener('DOMContentLoaded', repopulateVideoList);
 
 // this splits the url after the = and takes that part as a VIDEO ID
 function extractVideoID(videoURL) {
@@ -136,6 +146,9 @@ function isValidYouTubeURL(url) {
 }
 
 function showNotification(message, type) {
+    removeNotification('info');
+    removeNotification('errr');
+
     var notificationContainer = document.getElementById('notification-container');
     if (!notificationContainer) {
         console.error("Notification container not found! Creating a new one...");
