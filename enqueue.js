@@ -121,7 +121,9 @@ function createVideoEntry(entry, data) {
 
     entry.innerHTML = `
         <div class='video-left-side-container'>
-            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
+            <button class='image-button delete-button' data-video-entry-id='entry${videos}'>
+                <img class="video-button-image" src="./img/Delete.svg" id="video-delete-button-image"/>
+            </button>
             <h1 class='video-order-number'>${videos}</h1>
         </div>
         <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
@@ -129,7 +131,9 @@ function createVideoEntry(entry, data) {
             <h1 class='video-title'>${data.title}</h1>
             <p class='video-description'>${data.channel}</p>
         </div>
-        <button class='image-button video-drag-button'></button>
+        <button class='image-button video-drag-button'>
+            <img class="video-button-image" src="./img/Drag.svg" id="video-drag-button-image"/>
+        </button>
     `;
 
 }
@@ -145,16 +149,19 @@ function addVideo(data){
 
     entry.innerHTML = `
         <div class='video-left-side-container'>
-            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
+        <button class='image-button delete-button' data-video-entry-id='entry${videos}'>
+            <img class="video-button-image" src="./img/Delete.svg" id="video-delete-button-image"/>
+        </button>
             <h1 class='video-order-number'>${videos}</h1>
         </div>
         <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
         <div class='video-information-container'>
             <h1 class='video-title'>${data.title}</h1>
             <p class='video-description'>${data.channel}</p>
-            <p class-'debug'>hey this is currently ${videos} into the list</p>
         </div>
-        <button class='image-button video-drag-button'></button>
+        <button class='image-button video-drag-button'>
+            <img class="video-button-image" src="./img/Drag.svg" id="video-drag-button-image"/>
+        </button>
     `;
 }
 
