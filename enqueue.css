@@ -102,6 +102,15 @@ h1 {
   height: 0.75rem;
   cursor: pointer;
 }
+#dropdown-order.active {
+  filter: invert(1); 
+}
+
+.sort-text {
+  font-weight: bold;
+  color: #c52c25; 
+}
+
 
 .dropdown-content {
   overflow: hidden;
