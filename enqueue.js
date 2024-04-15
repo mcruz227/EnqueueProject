@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("dropdown-order").addEventListener("click", flipOrder);
     document.getElementById("video-input-submit-button").addEventListener("click", function() {
         addVideoButton();
-        //repopulateVideoList(); 
     });
 
     document.getElementById("shuffle-button").addEventListener("click", shuffleVideos);
@@ -100,6 +99,7 @@ function createVideoEntry(entry, data) {
 
 }
 
+//Adds the video to the
 function addVideo(data){
     videos++;
     var entry = document.createElement("div");
@@ -122,45 +122,6 @@ function addVideo(data){
         <button class='image-button video-drag-button'></button>
     `;
 }
-
-function visualizeVideos(data){
-    videos++;
-    var entry = document.createElement("div");
-    entry.classList.add("video-entry");
-    entry.id = "entry" + videos;
-    entry.dataset.videoId = data.videoId; 
-    queueContainer.appendChild(entry);
-
-    entry.innerHTML = `
-        <div class='video-left-side-container'>
-            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
-            <h1 class='video-order-number'>${videos}</h1>
-        </div>
-        <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
-        <div class='video-information-container'>
-            <h1 class='video-title'>${data.title}</h1>
-            <p class='video-description'>${data.channel}</p>
-        </div>
-        <button class='image-button video-drag-button'></button>
-    `;
-}
-
-
-
-//separate function to repopulate the video list with the ^ updated data
-function repopulateVideoList(){
-
-    chrome.storage.local.get(null, function(data) {
-        Object.keys(data).forEach(function(key) {
-            if (key.startsWith('entry')) {
-                addVideo(document.getElementById(key), data[key]);
-            }
-        });
-    });
-}
-
-//calling the function^
-//document.addEventListener('DOMContentLoaded', repopulateVideoList);
 
 // this splits the url after the = and takes that part as a VIDEO ID
 function extractVideoID(videoURL) {
@@ -186,12 +147,6 @@ function flipOrder() {
         ascending = true;
     }
 }
-
-// function populateUI(videos) {
-//     videos.forEach(function(videoLink) {
-//         addVideo({ videoId: videos.videoId, title: videos.title, channel: videos.channel, thumbnail: 'Thumbnail URL' });
-//     });
-// }
 
 function populateUI(videos) {
       if (videos.length > 0) {
@@ -220,7 +175,6 @@ function addVideoButton() {
 
     if (isValidYouTubeURL(videoUrl)) {
         var videoId = extractVideoID(videoUrl);
-        //saveVideoLink(videoUrl);
         videoID_toBackend(videoId);
         videoUrlInput.value = ''; 
         showNotification('Video added successfully!', 'success');
@@ -303,52 +257,21 @@ function shuffleVideos() {
 }, 2000);
 }
 
-// // getting VIDEOS TO ACTUALLY STAY/SAVED IN THE EXTENSION for each user
-// function saveVideoLink(videoLink) {
-//     chrome.storage.local.get({ videos: [] }, function(data) {
-//         var videos = data.videos;
-//         videos.push(videoLink);
-
-//         chrome.storage.local.set({ videos: videos });
-
-//         chrome.storage.local.set({ videos: videos }, function() {
-//             getVideoLinks(function(videos){
-//                 console.log("video links after saving: " , videos);
-//             });
-//         });
-//     });
-// }
-
-
-function saveVideoLink(videoLink) {
-    
-    chrome.storage.local.get({ videos: [] }, function(data) {
-        var videos = data.videos;
-        videos.push(videoLink);
-        chrome.storage.local.set({ videos: videos });
-    });
-}
 
 //The same as the function already implemented
-function saveVideoData(videoLink) {
+//Saving the video data to Chrome's local storage
+function saveVideoData(videoData) {
     // Debug to reset the storage while fiddling with 
     // chrome.storage.local.set({ videos: [] });
 
     chrome.storage.local.get({ videos: [] }, function(data) {
         var videos = data.videos;
-        videos.push(videoLink);
+        videos.push(videoData);
         chrome.storage.local.set({ videos: videos });
     });
 
   }
 
-// function getVideoLinks(callback) {
-//     chrome.storage.local.get({ videos: [] }, function(data) {
-//         var videos = data.videos;
-//         console.log("retrieved videos: ", videos);
-//         callback(videos);
-//     });
-// }
 
 function getVideoLinks(callback) {
     chrome.storage.local.get({ videos: [] }, function (data) {
@@ -379,11 +302,7 @@ getVideoLinks(function(videos) {
     });
 });
 
-
-// getVideoLinks(function(videos) {
-//     videos.forEach(function(video) {
-//     });
-// });
+//Original Python API Implementation that doesn't seem to work at the moment
 // this will send the ID of a youtube video to the backend(python apiCall) in order to get detail about video
 // function videoID_toBackend(videoId) {
 //     showNotification('Fetching video details...', 'info');
@@ -402,13 +321,18 @@ getVideoLinks(function(videos) {
 //         return response.json();
 //     })
 //     .then(data => {
-//         if (data) {
-//             createVideoEntry({
+//         if (data.items && data.items.length > 0) {
+//             const videoDetails = data.items[0].snippet;
+                    
+//             //Save the video data to pass into the video adder and the save function
+//             video_info = {
 //                 videoId: videoId,
-//                 title: data.title,
-//                 channel: data.channel,
-//                 thumbnail: data.thumbnail
-//             });
+//                 title: videoDetails.title,
+//                 channel: videoDetails.channelTitle,
+//                 thumbnail: videoDetails.thumbnails.default.url
+//             }
+//             addVideo(video_info);
+//             saveVideoData(video_info);
 //             removeNotification('info');
 //             showNotification('Video details fetched successfully!', 'success');
 //         } else {
