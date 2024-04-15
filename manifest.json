@@ -6,17 +6,18 @@
     "description" : "Chrome Extension improving queue and watch later features from the Youtube Platform.",
     "permissions" : [
         "activeTab",
-        "storage"
+        "storage", "tabs" ], 
+        
+    "host_permissions": ["https://www.googleapis.com/"],
 
-    ],
-   
+     "background": {
+        "service_worker": "background.js"
+    },
     "action": {
         "default_popup": "enqueue.html"
 
-    },
+    }, 
     
-    
-
 
     "content_scripts": [
            {
@@ -25,13 +26,7 @@
              "js": ["enqueue.js"]
 
             }
-        ],
-
-    "background": {
-        "service_worker": "background.js"
-    }
-    
-    
+        ]
 
 }
 

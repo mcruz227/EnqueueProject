@@ -1,4 +1,4 @@
-var ascending = false;
+var ascending = true;
 var videos = 0;
 const queueContainer = document.getElementById("videoQueue");
 
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getVideoLinks(function(videos) {
         populateUI(videos);
     });
-  
+
     document.getElementById("dropdown-order").addEventListener("click", flipOrder);
     document.getElementById("video-input-submit-button").addEventListener("click", function() {
         addVideoButton();
@@ -21,13 +21,32 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteVideo(event.target.dataset.videoEntryId);
         }
     });
-     var sortOptions = document.getElementsByClassName("dropdown-content-option");
-     for (var i = 0; i < sortOptions.length; i++) {
+
+    var sortOptions = document.getElementsByClassName("dropdown-content-option");
+    for (var i = 0; i < sortOptions.length; i++) {
         sortOptions[i].addEventListener("click", function(event) {
-            sortVideos(event.target.textContent);
+            var sortOption = event.target.textContent;
+            sortVideos(sortOption);
+            updateSortButton(sortOption);
         });
     }
 });
+
+function updateSortButton(sortOption) {
+    var dropdownOrder = document.getElementById("dropdown-order");
+    var sortText = document.getElementById("sort-by-button");
+
+    if (sortOption === 'Chronological') {
+        dropdownOrder.style.transform = "rotate(0deg)";
+        dropdownOrder.title = "Descending";
+        sortText.textContent = "Descending";
+    } else if (sortOption === 'Reverse Chronological') {
+        dropdownOrder.style.transform = "rotate(180deg)";
+        dropdownOrder.title = "Ascending";
+        sortText.textContent = "Ascending";
+    }
+}
+
 
 
 
@@ -35,21 +54,37 @@ function openVideoInTab(videoId){
     window.open("https://www.youtube.com/watch?v=" + videoId, "_blank");
 }
 
-function deleteVideo(entryId){
+function deleteVideo(entryId) {
     var entry = document.getElementById(entryId);
     if (entry) {
         var confirmDelete = confirm("Are you sure you want to delete this video?");
         if (confirmDelete) {
             entry.remove();
 
-            chrome.storage.local.remove(entryId, function() {
-                console.log("Video details removed:", entryId);
+            // take the numeric part of the entryId
+            var entryIndex = parseInt(entryId.replace("entry", ""));
+
+            // correct key
+            var storageKey = "entry" + entryIndex;
+
+            chrome.storage.local.remove(storageKey, function() {
+                console.log("Video details removed:", storageKey);
+            });
+
+            // updating the video count
+            videos--;
+
+            // re-index the video entries order numbers
+            var videoEntries = document.querySelectorAll('.video-entry');
+            videoEntries.forEach(function(entry, index) {
+                entry.querySelector('.video-order-number').textContent = index + 1;
             });
         }
     } else {
         console.error("Element with ID " + entryId + " not found.");
     }
 }
+
 
 
 function createVideoEntry(entry, data) {
@@ -97,6 +132,7 @@ function createVideoEntry(entry, data) {
         <button class='image-button video-drag-button'></button>
     `;
 
+
 }
 
 //Adds the video to the
@@ -123,6 +159,7 @@ function addVideo(data){
     `;
 }
 
+
 // this splits the url after the = and takes that part as a VIDEO ID
 function extractVideoID(videoURL) {
     const parts = videoURL.split('=');
@@ -135,18 +172,38 @@ function flipOrder() {
     var dropdownOrder = document.getElementById("dropdown-order");
     var sortText = document.getElementById("sort-text");
     
-    if(ascending) {
+    if (ascending) {
         dropdownOrder.style.transform = "rotate(0deg)";
-        dropdownOrder.title="Descending";
+        dropdownOrder.title = "Descending";
         sortText.textContent = "Descending";
-        ascending = false;
     } else {
         dropdownOrder.style.transform = "rotate(180deg)";
-        dropdownOrder.title="Ascending";
+        dropdownOrder.title = "Ascending";
         sortText.textContent = "Ascending";
-        ascending = true;
     }
+
+    ascending = !ascending;
 }
+
+function populateUI(videos) {
+      if (videos.length > 0) {
+        for (const video of videos) {
+          const videoId = video.videoId;
+          console.log("Video ID:", videoId);
+          addVideo({ 
+            videoId: video.videoId, 
+            title: video.title, 
+            channel: video.channel, 
+            thumbnail: video.thumbnail});
+
+          // You can perform additional actions with the videoId here
+        }
+      } else {
+        console.log("No videos found in storage");
+      }
+    
+  }
+
 
 function populateUI(videos) {
       if (videos.length > 0) {
@@ -175,6 +232,7 @@ function addVideoButton() {
 
     if (isValidYouTubeURL(videoUrl)) {
         var videoId = extractVideoID(videoUrl);
+
         videoID_toBackend(videoId);
         videoUrlInput.value = ''; 
         showNotification('Video added successfully!', 'success');
@@ -211,33 +269,73 @@ function showNotification(message, type) {
 
 // initial call to the function
 // videoID_toBackend("your_video_id_here");
+var currentSortOption = '';
+//var currentSortOrder = true; 
+
 
 function sortVideos(sortOption) {
     var videoEntries = document.querySelectorAll('.video-entry');
     var videoArray = Array.from(videoEntries);
+
+    // Reset sorting order to default (ascending) when a new sorting option is selected
+    ascending = true;
+
     videoArray.sort(function(a, b) {
-        var textAElement = a.querySelector('.video-' + sortOption.toLowerCase());
-        var textA = textAElement ? textAElement.textContent.toUpperCase() : '';
-        var textBElement = b.querySelector('.video-' + sortOption.toLowerCase());
-        var textB = textBElement ? textBElement.textContent.toUpperCase() : '';
-        if (textA < textB) return -1;
-        if (textA > textB) return 1;
-        return 0;
+        switch (sortOption) {
+            case 'Channel Title':
+                var channelTitleA = a.querySelector('.video-description').textContent.toLowerCase();
+                var channelTitleB = b.querySelector('.video-description').textContent.toLowerCase();
+                return channelTitleA.localeCompare(channelTitleB);
+            case 'Video Title':
+                var videoTitleA = a.querySelector('.video-title').textContent.toLowerCase();
+                var videoTitleB = b.querySelector('.video-title').textContent.toLowerCase();
+                return videoTitleA.localeCompare(videoTitleB);
+            case 'Date':
+                var timestampA = parseInt(a.dataset.timestamp);
+                var timestampB = parseInt(b.dataset.timestamp);
+                return timestampB - timestampA; // Sort by descending timestamp (newest first)
+            case 'Chronological':
+                var timestampA = parseInt(a.dataset.timestamp);
+                var timestampB = parseInt(b.dataset.timestamp);
+                return timestampA - timestampB; // Sort by ascending timestamp (oldest first)
+            case 'Reverse Chronological':
+                var timestampA = parseInt(a.dataset.timestamp);
+                var timestampB = parseInt(b.dataset.timestamp);
+                return timestampA - timestampB; // Sort by ascending timestamp (oldest first)
+            default:
+                return 0;
+        }
     });
+
+    // If the sorting option is Reverse Chronological, reverse the sorted array
+    if (sortOption === 'Reverse Chronological') {
+        videoArray.reverse();
+    }
+
     var videoQueue = document.getElementById("videoQueue");
     if (!videoQueue) {
         console.error("Video queue container not found!");
         return;
     }
+
+    // Clear the existing video queue
     videoQueue.innerHTML = '';
+
+    // Append sorted videos to the video queue
     videoArray.forEach(function(entry) {
         videoQueue.appendChild(entry);
     });
+
+    // Update the current sort option
+    currentSortOption = sortOption;
 }
+
+
+
+    
 
 //  to shuffle videos
 function shuffleVideos() {
-
     showNotification('shuffling videos...', 'info');
 
     var videoEntries = document.querySelectorAll('.video-entry');
@@ -253,8 +351,8 @@ function shuffleVideos() {
         var notification = document.querySelector('.notification.info');
         if (notification) {
             notification.remove();
-    }
-}, 2000);
+        }
+    }, 2000);
 }
 
 
@@ -267,11 +365,33 @@ function saveVideoData(videoData) {
     chrome.storage.local.get({ videos: [] }, function(data) {
         var videos = data.videos;
         videos.push(videoData);
+
         chrome.storage.local.set({ videos: videos });
     });
 
   }
 
+
+//The same as the function already implemented
+function saveVideoData(videoLink) {
+    // Debug to reset the storage while fiddling with 
+    // chrome.storage.local.set({ videos: [] });
+
+    chrome.storage.local.get({ videos: [] }, function(data) {
+        var videos = data.videos;
+        videos.push(videoLink);
+        chrome.storage.local.set({ videos: videos });
+    });
+
+  }
+
+// function getVideoLinks(callback) {
+//     chrome.storage.local.get({ videos: [] }, function(data) {
+//         var videos = data.videos;
+//         console.log("retrieved videos: ", videos);
+//         callback(videos);
+//     });
+// }
 
 function getVideoLinks(callback) {
     chrome.storage.local.get({ videos: [] }, function (data) {
@@ -297,6 +417,7 @@ function getVideoLinks(callback) {
     });
   }
 
+
 getVideoLinks(function(videos) {
     videos.forEach(function(video) {
     });
@@ -321,6 +442,7 @@ getVideoLinks(function(videos) {
 //         return response.json();
 //     })
 //     .then(data => {
+
 //         if (data.items && data.items.length > 0) {
 //             const videoDetails = data.items[0].snippet;
                     
@@ -333,6 +455,15 @@ getVideoLinks(function(videos) {
 //             }
 //             addVideo(video_info);
 //             saveVideoData(video_info);
+
+//         if (data) {
+//             createVideoEntry({
+//                 videoId: videoId,
+//                 title: data.title,
+//                 channel: data.channel,
+//                 thumbnail: data.thumbnail
+//             });
+
 //             removeNotification('info');
 //             showNotification('Video details fetched successfully!', 'success');
 //         } else {
@@ -385,4 +516,3 @@ function removeNotification(type) {
     }
 
 }
-
