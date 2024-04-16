@@ -205,26 +205,6 @@ function populateUI(videos) {
   }
 
 
-function populateUI(videos) {
-      if (videos.length > 0) {
-        for (const video of videos) {
-          const videoId = video.videoId;
-          console.log("Video ID:", videoId);
-          addVideo({ 
-            videoId: video.videoId, 
-            title: video.title, 
-            channel: video.channel, 
-            thumbnail: video.thumbnail});
-
-          // You can perform additional actions with the videoId here
-        }
-      } else {
-        console.log("No videos found in storage");
-      }
-    
-  }
-
-
 // when video input submit button is click, extracts video id from the video url entered, calls video id to backend
 function addVideoButton() {
     var videoUrlInput = document.getElementById('video-input-box');
