@@ -300,7 +300,7 @@ function sortVideos(sortOption) {
     var videoEntries = document.querySelectorAll('.video-entry');
     var videoArray = Array.from(videoEntries);
 
-    // Reset sorting order to default (ascending) when a new sorting option is selected
+    // reset sorting order to default (ascending) when a new sorting option is selected
     ascending = true;
 
     videoArray.sort(function(a, b) {
@@ -316,21 +316,21 @@ function sortVideos(sortOption) {
             case 'Date':
                 var timestampA = parseInt(a.dataset.timestamp);
                 var timestampB = parseInt(b.dataset.timestamp);
-                return timestampB - timestampA; // Sort by descending timestamp (newest first)
+                return timestampB - timestampA; // sort by descending timestamp (newest first)
             case 'Chronological':
                 var timestampA = parseInt(a.dataset.timestamp);
                 var timestampB = parseInt(b.dataset.timestamp);
-                return timestampA - timestampB; // Sort by ascending timestamp (oldest first)
+                return timestampA - timestampB; // sort by ascending timestamp (oldest first)
             case 'Reverse Chronological':
                 var timestampA = parseInt(a.dataset.timestamp);
                 var timestampB = parseInt(b.dataset.timestamp);
-                return timestampA - timestampB; // Sort by ascending timestamp (oldest first)
+                return timestampA - timestampB; // sort by ascending timestamp (oldest first)
             default:
                 return 0;
         }
     });
 
-    // If the sorting option is Reverse Chronological, reverse the sorted array
+    // ff the sorting option is Reverse Chronological, reverse the sorted array
     if (sortOption === 'Reverse Chronological') {
         videoArray.reverse();
     }
@@ -341,15 +341,15 @@ function sortVideos(sortOption) {
         return;
     }
 
-    // Clear the existing video queue
+    // clear the existing video queue
     videoQueue.innerHTML = '';
 
-    // Append sorted videos to the video queue
+    // append sorted videos to the video queue
     videoArray.forEach(function(entry) {
         videoQueue.appendChild(entry);
     });
 
-    // Update the current sort option
+    // update the current sort option
     currentSortOption = sortOption;
 }
 
