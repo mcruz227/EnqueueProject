@@ -484,3 +484,12 @@ function removeNotification(type) {
     }
 
 }
+
+module.exports ={
+    extractVideoID,
+    isValidYouTubeURL,
+    openVideoInTab,
+    getVideoLinks,
+    saveVideoData,
+
+}
