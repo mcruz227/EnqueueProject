@@ -340,24 +340,6 @@ function shuffleVideos() {
     }, 2000);
 }
 
-
-//The same as the function already implemented
-//Saving the video data to Chrome's local storage
-function saveVideoData(videoData) {
-    // Debug to reset the storage while fiddling with 
-    // chrome.storage.local.set({ videos: [] });
-
-    chrome.storage.local.get({ videos: [] }, function(data) {
-        var videos = data.videos;
-        videos.push(videoData);
-
-        chrome.storage.local.set({ videos: videos });
-    });
-
-  }
-
-
-
 // function getVideoLinks(callback) {
 //     chrome.storage.local.get({ videos: [] }, function(data) {
 //         var videos = data.videos;
