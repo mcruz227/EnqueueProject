@@ -67,9 +67,22 @@ function deleteVideo(entryId) {
             // correct key
             var storageKey = "entry" + entryIndex;
 
-            chrome.storage.local.remove(storageKey, function() {
-                console.log("Video details removed:", storageKey);
+
+            chrome.storage.local.get({ videos: [] }, function(data) {
+                const removeIndex = entryIndex - 1
+                var videoList = data.videos;
+                console.log("Item to remove:", data.videos[removeIndex]);
+
+                if (removeIndex >= 0 && removeIndex < videoList.length) {
+                    videoList.splice(removeIndex, 1); // Remove the element at removeIndex
+                
+                    // Store the modified video list back in storage
+                    chrome.storage.local.set({ videos: videoList });
+                  } else {
+                    console.log("Invalid index for video removal.");
+                  }
             });
+
 
             // updating the video count
             videos--;
@@ -485,11 +498,15 @@ function removeNotification(type) {
 
 }
 
-module.exports ={
-    extractVideoID,
-    isValidYouTubeURL,
-    openVideoInTab,
-    getVideoLinks,
-    saveVideoData,
 
-}
+if (typeof module !== 'undefined') {
+    module.exports ={
+        extractVideoID,
+        isValidYouTubeURL,
+        openVideoInTab,
+        getVideoLinks,
+        saveVideoData,
+    
+    }
+  }
+
