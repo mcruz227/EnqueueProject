@@ -352,18 +352,6 @@ function saveVideoData(videoData) {
   }
 
 
-//The same as the function already implemented
-function saveVideoData(videoLink) {
-    // Debug to reset the storage while fiddling with 
-    // chrome.storage.local.set({ videos: [] });
-
-    chrome.storage.local.get({ videos: [] }, function(data) {
-        var videos = data.videos;
-        videos.push(videoLink);
-        chrome.storage.local.set({ videos: videos });
-    });
-
-  }
 
 // function getVideoLinks(callback) {
 //     chrome.storage.local.get({ videos: [] }, function(data) {
@@ -460,7 +448,7 @@ getVideoLinks(function(videos) {
 // }
 
 function videoID_toBackend(videoId) {
-    fetch('https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=AIzaSyDnUbZpNA12WQCmpmottG2Q6GPND08nyBQ&part=snippet', {
+    fetch('https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=AIzaSyDzPp75YyrVs6G8DaHkTMDwo5JCBqDj63U&part=snippet', {
     // we are getting the video id from the users input, then the server 'asks' from the youtube api for details
         method: 'GET'
     })
