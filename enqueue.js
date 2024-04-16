@@ -121,16 +121,19 @@ function createVideoEntry(entry, data) {
 
     entry.innerHTML = `
         <div class='video-left-side-container'>
-            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
-            <h1 class='video-order-number'>${videos}</h1>
+        <button class='image-button delete-button' data-video-entry-id='entry${videos}'>
+        <img class="video-button-image" src="./img/Delete.svg" id="video-delete-button-image"/>
+    </button>
+                <h1 class='video-order-number'>${videos}</h1>
         </div>
         <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
         <div class='video-information-container'>
             <h1 class='video-title'>${data.title}</h1>
             <p class='video-description'>${data.channel}</p>
         </div>
-        <button class='image-button video-drag-button'></button>
-    `;
+        <button class='image-button video-drag-button'>
+        <img class="video-button-image" src="./img/Drag.svg" id="video-drag-button-image"/>
+    </button>    `;
 
 
 }
@@ -146,17 +149,19 @@ function addVideo(data){
 
     entry.innerHTML = `
         <div class='video-left-side-container'>
-            <button class='image-button delete-button' data-video-entry-id='entry${videos}'></button>
-            <h1 class='video-order-number'>${videos}</h1>
+        <button class='image-button delete-button' data-video-entry-id='entry${videos}'>
+        <img class="video-button-image" src="./img/Delete.svg" id="video-delete-button-image"/>
+    </button>
+                <h1 class='video-order-number'>${videos}</h1>
         </div>
         <img class='video-thumbnail' src='${data.thumbnail}' id='video-image-${videos}'/>
         <div class='video-information-container'>
             <h1 class='video-title'>${data.title}</h1>
             <p class='video-description'>${data.channel}</p>
-            <p class-'debug'>hey this is currently ${videos} into the list</p>
         </div>
-        <button class='image-button video-drag-button'></button>
-    `;
+        <button class='image-button video-drag-button'>
+        <img class="video-button-image" src="./img/Drag.svg" id="video-drag-button-image"/>
+    </button>    `;
 }
 
 
@@ -257,7 +262,7 @@ function sortVideos(sortOption) {
     var videoEntries = document.querySelectorAll('.video-entry');
     var videoArray = Array.from(videoEntries);
 
-    // reset sorting order to default (ascending) when a new sorting option is selected
+    // Reset sorting order to default (ascending) when a new sorting option is selected
     ascending = true;
 
     videoArray.sort(function(a, b) {
@@ -273,21 +278,21 @@ function sortVideos(sortOption) {
             case 'Date':
                 var timestampA = parseInt(a.dataset.timestamp);
                 var timestampB = parseInt(b.dataset.timestamp);
-                return timestampB - timestampA; // sort by descending timestamp (newest first)
+                return timestampB - timestampA; // Sort by descending timestamp (newest first)
             case 'Chronological':
                 var timestampA = parseInt(a.dataset.timestamp);
                 var timestampB = parseInt(b.dataset.timestamp);
-                return timestampA - timestampB; // sort by ascending timestamp (oldest first)
+                return timestampA - timestampB; // Sort by ascending timestamp (oldest first)
             case 'Reverse Chronological':
                 var timestampA = parseInt(a.dataset.timestamp);
                 var timestampB = parseInt(b.dataset.timestamp);
-                return timestampA - timestampB; // sort by ascending timestamp (oldest first)
+                return timestampA - timestampB; // Sort by ascending timestamp (oldest first)
             default:
                 return 0;
         }
     });
 
-    // ff the sorting option is Reverse Chronological, reverse the sorted array
+    // If the sorting option is Reverse Chronological, reverse the sorted array
     if (sortOption === 'Reverse Chronological') {
         videoArray.reverse();
     }
@@ -298,15 +303,15 @@ function sortVideos(sortOption) {
         return;
     }
 
-    // clear the existing video queue
+    // Clear the existing video queue
     videoQueue.innerHTML = '';
 
-    // append sorted videos to the video queue
+    // Append sorted videos to the video queue
     videoArray.forEach(function(entry) {
         videoQueue.appendChild(entry);
     });
 
-    // update the current sort option
+    // Update the current sort option
     currentSortOption = sortOption;
 }
 
@@ -352,18 +357,6 @@ function saveVideoData(videoData) {
   }
 
 
-//The same as the function already implemented
-function saveVideoData(videoLink) {
-    // Debug to reset the storage while fiddling with 
-    // chrome.storage.local.set({ videos: [] });
-
-    chrome.storage.local.get({ videos: [] }, function(data) {
-        var videos = data.videos;
-        videos.push(videoLink);
-        chrome.storage.local.set({ videos: videos });
-    });
-
-  }
 
 // function getVideoLinks(callback) {
 //     chrome.storage.local.get({ videos: [] }, function(data) {
@@ -460,7 +453,7 @@ getVideoLinks(function(videos) {
 // }
 
 function videoID_toBackend(videoId) {
-    fetch('https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=AIzaSyDnUbZpNA12WQCmpmottG2Q6GPND08nyBQ&part=snippet', {
+    fetch('https://www.googleapis.com/youtube/v3/videos?id=' + videoId + '&key=AIzaSyDzPp75YyrVs6G8DaHkTMDwo5JCBqDj63U&part=snippet', {
     // we are getting the video id from the users input, then the server 'asks' from the youtube api for details
         method: 'GET'
     })
